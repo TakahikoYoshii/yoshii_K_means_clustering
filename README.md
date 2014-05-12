@@ -1,2 +1,2 @@
-K_means_yoshii
+yoshii_K_means_clustering
 ==============
