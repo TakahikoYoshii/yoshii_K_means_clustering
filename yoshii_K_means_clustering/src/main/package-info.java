@@ -1,8 +1,0 @@
-/**
- * 
- */
-/**
- * @author yoshii
- *
- */
-package main;
