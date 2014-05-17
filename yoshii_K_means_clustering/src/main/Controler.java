@@ -10,8 +10,8 @@ public class Controler {
 		this.inputData = stringList; 
 	}
 
-	public Vector modelingVector() {
-		return new Vector(inputData);
+	public VectorList modelingVector() {
+		return new VectorList(inputData);
 	}
 
 	public ClusterList getResult() {

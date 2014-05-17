@@ -9,7 +9,7 @@ import main.ClusterList;
 import main.ClusteringStrategy;
 import main.Controler;
 import main.K_means_Strategy;
-import main.Vector;
+import main.VectorList;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -18,7 +18,7 @@ import static org.hamcrest.CoreMatchers.*;
 
 public class ControlerTest {
 	List<String> stringList = new ArrayList<String>();
-	ClusteringStrategy strategy = new K_means_Strategy();
+	ClusteringStrategy strategy ;
 	Controler stu ;
 	String numberOfCluster;
 	
@@ -32,8 +32,8 @@ public class ControlerTest {
 	}
 	@Test
 	public void test自分の持っているstringListをベクトル化してVector型のインスタンスを取得できる() {
-		Vector actualVector = stu.modelingVector();
-		assertThat(actualVector, instanceOf(Vector.class));
+		VectorList actualVector = stu.modelingVector();
+		assertThat(actualVector, instanceOf(VectorList.class));
 	}
 	
 	@Test
