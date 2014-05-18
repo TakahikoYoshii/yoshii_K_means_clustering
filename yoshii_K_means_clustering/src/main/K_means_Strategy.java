@@ -14,6 +14,7 @@ public class K_means_Strategy implements ClusteringStrategy {
 		this.vectorList = vectorList;
 		this.clusterList = this.createClusterList();
 	}
+	
 
 	private ClusterList createClusterList() {
 		ClusterList list = new ClusterList();
