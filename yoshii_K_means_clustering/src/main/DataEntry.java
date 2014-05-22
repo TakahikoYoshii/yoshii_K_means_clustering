@@ -24,15 +24,14 @@ public class DataEntry {
 		System.out.println("Please Input Data ....");
 		while(true){
 			String input = br.readLine();
-//			if(isCollectInput(input)){
-//				System.out.print("不正な文字の入力です。");
-//				break;
-//			}
+			if(isCollectInput(input)){
+				System.out.print("不正な文字の入力です。");
+				break;
+			}
 			if(!(input.equals(""))){
 				inputString.append(input+"\n");
 			}else{
 				if(brancksequence){
-//					System.out.println("空白の行を入れずに入力してください。");
 					break;
 				}else{
 					brancksequence = true;
@@ -45,10 +44,7 @@ public class DataEntry {
 		String regex = ".*[0-9].*";
 		Pattern pattern = Pattern.compile(regex);
 		Matcher matcher = pattern.matcher(string);
-		String regex1 = "";
-		Pattern pattern1 = Pattern.compile(regex1);
-		Matcher matcher1 = pattern1.matcher(string);
-		if(matcher.find()||matcher1.find()){
+		if(matcher.find()||string.equals("")){
 			return false;
 		}else{
 			return true;
