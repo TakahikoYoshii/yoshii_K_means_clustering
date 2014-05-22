@@ -2,6 +2,7 @@ package main;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Controler {
 	private List<String> inputData = new ArrayList<String>();
@@ -37,13 +38,21 @@ public class Controler {
 	private void executeK_means(){
 		K_means_Strategy strategy = new K_means_Strategy(this.numberOfCluster, this.vectorList);
 		long seed = 49;
-		strategy.firstClustering(seed);
-		strategy.clustering();
-		while(strategy.validateThreshold()){
-			strategy.setCentralPoint();
-			strategy.clustering();  
-			strategy.setCentralPoint();
-		}
+		Random ran = new Random();
+		label : do{
+			strategy.firstClustering(seed);
+			if(strategy.isEmpty()){seed = ran.nextLong(); continue label;}
+			strategy.clustering();
+			if(strategy.isEmpty()){seed = ran.nextLong(); continue label;}
+			while(strategy.validateThreshold()){
+				strategy.setCentralPoint();
+				if(strategy.isEmpty()){seed = ran.nextLong(); continue label;}
+				strategy.clustering();  
+				if(strategy.isEmpty()){seed = ran.nextLong(); continue label;}
+				strategy.setCentralPoint();
+				if(strategy.isEmpty()){seed = ran.nextLong(); continue label;}
+			}
+		}while(strategy.isEmpty());
 		this.clusterList = strategy.getClusterList();
 
 	}

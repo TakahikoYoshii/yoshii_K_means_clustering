@@ -17,7 +17,7 @@ public class ControlerTest {
 	List<String> stringList ;
 	Controler sut ;
 	String numberOfCluster ;
-	String testString = "2\n\n"
+	String testString = "\n\n"
 			+ "0 0 0 0 0 0 0 0 0 0 0\n"//1
 			+ "0 0 0 0 0 0 1 0 0 0 0\n"//2
 			+ "0 0 1 0 0 0 0 0 0 0 0\n"//3

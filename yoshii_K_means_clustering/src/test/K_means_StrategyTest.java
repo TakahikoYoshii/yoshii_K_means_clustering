@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Random;
 
 import main.Cluster;
 import main.ClusterList;
@@ -227,7 +228,7 @@ public class K_means_StrategyTest {
 		assertThat(clusterList.getList().get(1).getCentralPoint().get("Y"), is(new BigDecimal(2.3301, mc)));
 	}
 	@Test
-	public void testgさらにもう一度クラスタリングした時に前の各クラスタの中心点の動きが閾値以下ならクラスタリング終了() {
+	public void testクラスタ数を増やしてさらにもう一度クラスタリングした時に前の各クラスタの中心点の動きが閾値以下ならクラスタリング終了() {
 		ArrayList<String> inputData = new ArrayList<String>();
 			inputData.add("0 0 0 0 0 0 0 0 0 0 0");//1
 			inputData.add("0 0 0 0 0 0 1 0 0 0 0");//2
@@ -243,26 +244,34 @@ public class K_means_StrategyTest {
 		VectorList vectorList = new VectorList(inputData);
 		sut = new K_means_Strategy(3, vectorList);
 		long seed = 49;
-		sut.firstClustering(seed);
-		sut.clustering();
-		sut.setCentralPoint();
-		while(sut.validateThreshold()){
-			sut.setCentralPoint();
-			sut.clustering();  
-		}
+		Random ran = new Random();
+		label : do{
+			sut.firstClustering(seed);
+			if(sut.isEmpty()){seed = ran.nextLong(); continue label;}
+			sut.clustering();
+			if(sut.isEmpty()){seed = ran.nextLong(); continue label;}
+			while(sut.validateThreshold()){
+				sut.setCentralPoint();
+				if(sut.isEmpty()){seed = ran.nextLong(); continue label;}
+				sut.clustering();  
+				if(sut.isEmpty()){seed = ran.nextLong(); continue label;}
+				sut.setCentralPoint();
+				if(sut.isEmpty()){seed = ran.nextLong(); continue label;}
+			}
+		}while(sut.isEmpty());
 		ClusterList clusterList = sut.getClusterList();
 		assertThat(clusterList.getList().get(0).getVectorList().get(0).getData().get("X"), is(6));
 		assertThat(clusterList.getList().get(0).getVectorList().get(0).getData().get("Y"), is(6));
-		assertThat(clusterList.getList().get(0).getVectorList().get(1).getData().get("X"), is(6));
-		assertThat(clusterList.getList().get(0).getVectorList().get(1).getData().get("Y"), is(8));
-		assertThat(clusterList.getList().get(0).getVectorList().get(2).getData().get("X"), is(9));
-		assertThat(clusterList.getList().get(0).getVectorList().get(2).getData().get("Y"), is(10));
 		assertThat(clusterList.getList().get(1).getVectorList().get(0).getData().get("X"), is(6));
-		assertThat(clusterList.getList().get(1).getVectorList().get(0).getData().get("Y"), is(1));
-		assertThat(clusterList.getList().get(1).getVectorList().get(1).getData().get("X"), is(2));
-		assertThat(clusterList.getList().get(1).getVectorList().get(1).getData().get("Y"), is(2));
-		assertThat(clusterList.getList().get(1).getVectorList().get(2).getData().get("X"), is(3));
-		assertThat(clusterList.getList().get(1).getVectorList().get(2).getData().get("Y"), is(4));
+		assertThat(clusterList.getList().get(1).getVectorList().get(0).getData().get("Y"), is(6));
+		assertThat(clusterList.getList().get(2).getVectorList().get(0).getData().get("X"), is(9));
+		assertThat(clusterList.getList().get(2).getVectorList().get(0).getData().get("Y"), is(10));
+		assertThat(clusterList.getList().get(2).getVectorList().get(1).getData().get("X"), is(2));
+		assertThat(clusterList.getList().get(2).getVectorList().get(1).getData().get("Y"), is(2));
+		assertThat(clusterList.getList().get(2).getVectorList().get(2).getData().get("X"), is(2));
+		assertThat(clusterList.getList().get(2).getVectorList().get(2).getData().get("Y"), is(2));
+		assertThat(clusterList.getList().get(2).getVectorList().get(3).getData().get("X"), is(3));
+		assertThat(clusterList.getList().get(2).getVectorList().get(3).getData().get("Y"), is(4));
 		MathContext mc = new MathContext(3, RoundingMode.HALF_UP);
 		assertThat(clusterList.getList().get(0).getCentralPoint().get("X"), is(new BigDecimal(7.001, mc)));
 		assertThat(clusterList.getList().get(0).getCentralPoint().get("Y"), is(new BigDecimal(8.001, mc)));

@@ -50,7 +50,6 @@ public class MoldingData implements Comparator<String> {
 	}
 
 	public String sort(String[] dataArray) {
-		System.out.println(dataArray.length);
 		for (int i = dataArray.length - 1; i > 0; i--) {
 			for (int j = 0; j < i; j++) {
 				if (compare(dataArray[j], dataArray[j + 1]) > 0) {
@@ -69,19 +68,19 @@ public class MoldingData implements Comparator<String> {
 
 	@Override
 	public int compare(String thisString, String otherString) {
-		char[] thisCheracter = thisString.toCharArray();
-		char[] otherCheracter = otherString.toCharArray();
+		thisString = thisString.replaceAll(",", "　");
+		otherString = otherString.replaceAll(",", "　");
 		int thisNumber;
 		int otherNumber;
-		thisNumber = Integer.parseInt(Character.toString(thisCheracter[1]));
-		otherNumber = Integer.parseInt(Character.toString(otherCheracter[1]));
+		thisNumber = Integer.parseInt(thisString.substring(1, thisString.indexOf("　")));
+		otherNumber = Integer.parseInt(otherString.substring(1, otherString.indexOf("　")));
 		if(thisNumber > otherNumber){
 			return 1;
 		}else if(thisNumber < otherNumber){
 			return -1;
 		}else{
-			thisNumber = Integer.parseInt(Character.toString(thisCheracter[3]));
-			otherNumber = Integer.parseInt(Character.toString(otherCheracter[3]));
+			thisNumber = Integer.parseInt(thisString.substring(thisString.indexOf("　")+1, thisString.indexOf(")")));
+			otherNumber = Integer.parseInt(otherString.substring(otherString.indexOf("　")+1, otherString.indexOf(")")));
 			if(thisNumber > otherNumber){
 				return 1;
 			}else if(thisNumber < otherNumber){

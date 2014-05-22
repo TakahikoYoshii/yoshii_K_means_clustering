@@ -1,7 +1,6 @@
 package main;
 
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -47,5 +46,12 @@ public class Cluster {
 		BigDecimal x = this.centralPoint.get("X").subtract(this.centralPoint.get("oldX")).abs(); 
 		BigDecimal y = this.centralPoint.get("Y").subtract(this.centralPoint.get("oldY")).abs(); 
 		return x.pow(2).add(y.pow(2));
+	}
+	public boolean isEmpty(){
+		if(this.vectorList.size()==0){
+			return true;
+		}else{
+			return false;
+		}
 	}
 }

@@ -8,7 +8,8 @@ public class K_means_Strategy implements ClusteringStrategy {
 	private int cluster;
 	private VectorList vectorList;
 	private ClusterList clusterList ;
-
+	public boolean isEmpty = false;
+	
 	public K_means_Strategy(int numberOfCluster, VectorList vectorList) {
 		this.cluster = numberOfCluster;
 		this.vectorList = vectorList;
@@ -72,6 +73,16 @@ public class K_means_Strategy implements ClusteringStrategy {
 			if(!(differ == differ.min(new BigDecimal(0.1)))){
 				return false;
 			}
+		}
+		return false;
+	}
+	
+	public boolean isEmpty(){
+		for(Cluster cluster : clusterList.getList()){
+			if(cluster.isEmpty()){
+				return true;
+			}
+			continue;
 		}
 		return false;
 	}
