@@ -1,112 +1,71 @@
 package main;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class DataEntry {
-	private static DataEntry dataEntry;
-	private InputStream in;
-	private String numberOfCluster;
-	private ArrayList<ArrayList<String>> EntryData = new ArrayList<ArrayList<String>>();
-	private boolean isEND = true; 
-	InputStreamReader reader;
+	private static InputStream inputStream = System.in; 
+	private static StringBuffer inputString = new StringBuffer();
 	
-	public static DataEntry getInstance(){
-		if(dataEntry == null){
-			dataEntry = new DataEntry();
-		}
-		return dataEntry;
+	public static void setInputStream(InputStream stream){
+		inputStream = stream;
 	}
-	
-	private DataEntry() {
-		this.in = System.in;
+	public static String getInput(){
+		return inputString.toString();
 	}
-
-	public void setInputMethod(InputStream in) {
-		this.in = in;
-	}
-	public void createReader() throws UnsupportedEncodingException{
-		reader = new InputStreamReader(this.in, "UTF-8");
-	}
-	public void destroyReader() throws IOException{
-		reader.close();
-	}
-	public String getNumberOfCluster() {
-		return this.numberOfCluster;
-	}
-	
-	public boolean continueInput(){
-		return this.isEND;
-	}
-	
-	public void setNumberOfCluster() throws IOException{
-		this.numberOfCluster = enterNumberOfCluster();
-	}
-
-	public String enterNumberOfCluster() throws IOException {
-			int input = reader.read();
-			String inputString = Character.toString((char)input);
-			if(!(Pattern.matches(".*[0-9].*", inputString))){
-				isEND = false;
-				return null;
+		
+	public static void readInput() throws IOException{
+		BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
+		boolean brancksequence = false;
+		System.out.println("Please Input Data ....");
+		while(true){
+			String input = br.readLine();
+//			if(isCollectInput(input)){
+//				System.out.print("不正な文字の入力です。");
+//				break;
+//			}
+			if(!(input.equals(""))){
+				inputString.append(input+"\n");
+			}else{
+				if(brancksequence){
+//					System.out.println("空白の行を入れずに入力してください。");
+					break;
+				}else{
+					brancksequence = true;
+					inputString.append(input+"\n");				}
 			}
-			return inputString;
+		}
 	}
-
-	public void closeStream() throws IOException {
-		this.in.close();
-	}
-
-	public ArrayList<ArrayList<String>> getEntryData() {
-		return this.EntryData;
-	}
-
-	public void enterData() throws IOException {
-		StringBuffer sb = new StringBuffer();
-		sb.append(enterNumberOfCluster());
-	}
-
-	private void sample(String line) {
-		if(!(Pattern.matches(".*[0-9].*", line))){
-			isEND = false;
+	
+	public static boolean isCollectInput(String string){
+		String regex = ".*[0-9].*";
+		Pattern pattern = Pattern.compile(regex);
+		Matcher matcher = pattern.matcher(string);
+		String regex1 = "";
+		Pattern pattern1 = Pattern.compile(regex1);
+		Matcher matcher1 = pattern1.matcher(string);
+		if(matcher.find()||matcher1.find()){
+			return false;
 		}else{
-			ArrayList<String> stringList = new ArrayList<String>();
-			for(int i = 0 ; i <line.length() ; i++){
-				stringList.add(Character.toString(line.charAt(i)));
-			}
-			EntryData.add(stringList);
+			return true;
 		}
 	}
 	
-	public static void main(String[] args) {
-		DataEntry entry = DataEntry.getInstance();
-		try{
-		entry.createReader();
-		System.out.println("START ENTRY NUMBER OF CLUSTER");
-		entry.setNumberOfCluster();
-		System.out.println("END ENTRY NUMBER OF CLUSTER");		
-		System.out.println("START ENTRY DATA");
-		while(entry.continueInput()){
-			entry.enterData();
-		}
-		System.out.println("END ENTRY DATA");
-		entry.destroyReader();
-		}catch(IOException e){
-			throw new RuntimeException();
-		}
+	public static void outputData(String output){
+		System.out.println(output);
 	}
-//	private String readLine(){		
-//	try(
-//	InputStreamReader reader = new InputStreamReader(this.in, "UTF-8");
-//	BufferedReader lineReader = new BufferedReader(reader);){
-//	return lineReader.readLine();
-//	}catch(IOException e){
-//		return null;
-//	}
-//}
-
+	
+	public static void main(String[] args) throws IOException{
+		readInput();
+		MoldingData moldData = new MoldingData(inputString.toString());
+		moldData.setInputData();
+		Controler controler = new Controler(moldData.getNumberOfCluster(), moldData.getData(), "K_means");
+		System.out.println("Result as Clustering ....");
+		String output = moldData.moldOutputData(controler.execute());
+		outputData(output);
+	}
 }

@@ -1,6 +1,7 @@
 package main;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -27,14 +28,24 @@ public class Cluster {
 			x = x.add(new BigDecimal(vector.getData().get("X")));
 			y = y.add(new BigDecimal(vector.getData().get("Y")));
 		}
+		if(vectorList.size() != 0){
 		BigDecimal size = new BigDecimal(vectorList.size());
-		x = x.divide(size);
-		y = y.divide(size);
+		x = x.divide(size, 2, BigDecimal.ROUND_HALF_UP);
+		y = y.divide(size, 2, BigDecimal.ROUND_HALF_UP);
 		centralPoint.put("X", x);
 		centralPoint.put("Y", y);
+		}
 	}
 
 	public void clean() {
+		this.centralPoint.put("oldX", centralPoint.get("X"));
+		this.centralPoint.put("oldY", centralPoint.get("Y"));
 		vectorList.clear();
+	}
+
+	public BigDecimal movedCentralPoint() {
+		BigDecimal x = this.centralPoint.get("X").subtract(this.centralPoint.get("oldX")).abs(); 
+		BigDecimal y = this.centralPoint.get("Y").subtract(this.centralPoint.get("oldY")).abs(); 
+		return x.pow(2).add(y.pow(2));
 	}
 }
