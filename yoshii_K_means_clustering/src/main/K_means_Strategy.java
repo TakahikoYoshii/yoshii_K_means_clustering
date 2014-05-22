@@ -62,8 +62,17 @@ public class K_means_Strategy implements ClusteringStrategy {
 	private BigDecimal getDistance(Vector vector, Cluster cluster) {
 		BigDecimal x = cluster.getCentralPoint().get("X").subtract(new BigDecimal(vector.getData().get("X"))).abs(); 
 		BigDecimal y = cluster.getCentralPoint().get("Y").subtract(new BigDecimal(vector.getData().get("Y"))).abs();
-		System.out.println(x);
-		System.out.println(y);
 		return x.pow(2).add(y.pow(2));
+	}
+
+
+	public boolean validateThreshold() {
+		for(Cluster cluster : clusterList.getList()){
+			BigDecimal differ = cluster.movedCentralPoint();
+			if(!(differ == differ.min(new BigDecimal(0.1)))){
+				return false;
+			}
+		}
+		return false;
 	}
 }
